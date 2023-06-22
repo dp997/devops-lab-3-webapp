@@ -7,19 +7,23 @@ import boto3
 import pandas as pd
 ###### SQL CONNECTION ######
 print("Imported packages")
-rds = boto3.client('rds')
-
-print("Connected to AWS")
 
 dbhostname = os.environ['DBHOSTNAME']
 dbport = os.environ['DBPORT']
 dbusername = os.environ['DBUSERNAME']
 dbname = os.environ['DBNAME']
+region = os.environ['REGION']
+
+rds = boto3.client('rds', region_name=region)
+
+print("Connected to AWS")
+
+
 
 password = rds.generate_db_auth_token(DBHostname = dbhostname,
                                       Port = dbport,
                                       DBUsername = dbusername,
-                                      Region = None)
+                                      Region = region)
                        
 password = urllib.parse.quote(password)
 
