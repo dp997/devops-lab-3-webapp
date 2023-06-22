@@ -1,1 +1,4 @@
-flask sqlalchemy boto3 pandas
+flask 
+sqlalchemy 
+boto3 
+pandas
