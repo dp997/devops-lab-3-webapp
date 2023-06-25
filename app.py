@@ -30,10 +30,7 @@ password = urllib.parse.quote(password)
 engine_string = f'postgresql+psycopg2://{dbusername}:{password}@{dbhostname}:{dbport}/{dbname}?sslmode=require'
 # print(engine_string)
     
-engine = create_engine(engine_string)
 
-conn = engine.raw_connection()
-cursor = conn.cursor()
 
 ###### FLASK SERVER ######
 
@@ -41,12 +38,16 @@ cursor = conn.cursor()
 app = Flask(__name__)
 @app.route('/')    
 def index():    
+    engine = create_engine(engine_string)
+
+    conn = engine.raw_connection()
+    cursor = conn.cursor()
     cursor.execute(f"SELECT * FROM test_dataset")
     headings = [desc[0] for desc in cursor.description]
     print(headings)
     df = pd.DataFrame(cursor.fetchall(), columns = headings)
-    print(df.head(10))
-    
+    conn.close()
+    engine.dispose()
     return render_template('table.html',  tables=[df.to_html(classes='data')], titles=df.columns.values)
 
 if (__name__ == '__main__'):
