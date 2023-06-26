@@ -29,7 +29,8 @@ def get_db_connection():
     conn = psycopg2.connect(host=dbhostname,
                             database=dbname,
                             user=dbusername,
-                            password=password)
+                            password=password,
+                            sslmode = "require")
     return conn
 
 
