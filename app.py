@@ -5,6 +5,7 @@ import os
 import urllib
 import boto3
 import pandas as pd
+import logging
 ###### SQL CONNECTION ######
 print("Imported packages")
 
@@ -41,6 +42,7 @@ app = Flask(__name__)
 
 @app.route('/')    
 def index(): 
+    logging.basicConfig(filename='debug.log',level=logging.DEBUG)
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(f"SELECT * FROM test_dataset")
