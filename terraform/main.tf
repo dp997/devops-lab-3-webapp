@@ -17,20 +17,18 @@ variable "aws_region" {
 #ECR
 #`````````
 resource "aws_ecr_repository" "webapp_ecr" {
-  name = "${var.project_name}-webapp"
+  name                 = "${var.project_name}-webapp"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
     scan_on_push = true
   }
 
-  
-
 }
 
 resource "aws_ecr_lifecycle_policy" "ecr_policy" {
   repository = aws_ecr_repository.webapp_ecr.name
-  policy = <<EOF
+  policy     = <<EOF
   {
     "rules": [
       {
