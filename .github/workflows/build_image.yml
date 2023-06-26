@@ -1,0 +1,42 @@
+name: Deploy to ECR
+
+on:
+ 
+  push:
+    branches: [ main ]
+    paths: ['app.py', 'Dockerfile', 'requirements.txt']
+permissions:
+      id-token: write
+      contents: read 
+jobs:
+  
+  build:
+    
+    name: Build Image
+    runs-on: ubuntu-latest
+
+   
+    steps:
+
+    - name: Check out code
+      uses: actions/checkout@v2
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1.7.0
+      with:
+        role-to-assume: ${{ secrets.IAM_ROLE_ECR }}
+        role-session-name: Github_to_AWS_via_FederatedOIDC
+        aws-region: us-east-1
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image to Amazon ECR
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: devopslab3-webapp
+        IMAGE_TAG: latest
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
