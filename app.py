@@ -25,8 +25,6 @@ password = rds.generate_db_auth_token(DBHostname = dbhostname,
                                       DBUsername = dbusername,
                                       Region = region)
                        
-password = urllib.parse.quote(password)
-
 def get_db_connection():
     conn = psycopg2.connect(host=dbhostname,
                             database=dbname,
